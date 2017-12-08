@@ -77,7 +77,7 @@ public class Pendulo : MonoBehaviour {
     }
 
     // Update is called once per frame
-    void LateUpdate () {
+    void FixedUpdate () {
         time += Time.deltaTime;
 
         if (!method)
