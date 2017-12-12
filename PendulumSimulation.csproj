@@ -225,8 +225,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Scripts\InverseKinematics.cs" />
     <Compile Include="Assets\Scripts\Pendulo.cs" />
+    <Compile Include="Assets\Scripts\PredictScript.cs" />
     <Compile Include="Assets\Scripts\QuaternionClass.cs" />
+    <Compile Include="Assets\Scripts\RobotJoint.cs" />
+    <Compile Include="Assets\Scripts\SceneManager.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="GenerateTargetFrameworkMonikerAttribute" />
