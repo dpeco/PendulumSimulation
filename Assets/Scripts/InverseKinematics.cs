@@ -74,8 +74,7 @@ namespace ENTICourse.IK
         // Use this for initialization
         void Start()
         {
-            Joints = null;
-            if (Joints == null)
+            if (this.tag == "ggg")
                 GetJoints();
 
             ErrorFunction = DistanceFromTarget;
@@ -87,10 +86,10 @@ namespace ENTICourse.IK
             Solution = new float[Joints.Length];
         }
 
+        
 
-
-        // Update is called once per frame
-        void Update()
+    // Update is called once per frame
+    void Update()
         {
             target = Destination.transform.position;
             //ApproachTarget(target);
@@ -180,5 +179,9 @@ namespace ENTICourse.IK
         {
             Destination = newtarget;
         }
+
+        
     }
+
+    
 }
