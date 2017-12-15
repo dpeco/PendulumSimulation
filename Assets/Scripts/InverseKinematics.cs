@@ -11,9 +11,9 @@ namespace ENTICourse.IK
     public struct PositionRotation
     {
         Vector3 position;
-        Quaternion rotation;
+        QuaternionClass rotation;
 
-        public PositionRotation(Vector3 position, Quaternion rotation)
+        public PositionRotation(Vector3 position, QuaternionClass rotation)
         {
             this.position = position;
             this.rotation = rotation;
@@ -25,7 +25,7 @@ namespace ENTICourse.IK
             return pr.position;
         }
         // PositionRotation to Quaternion
-        public static implicit operator Quaternion(PositionRotation pr)
+        public static implicit operator QuaternionClass(PositionRotation pr)
         {
             return pr.rotation;
         }
@@ -74,7 +74,7 @@ namespace ENTICourse.IK
         // Use this for initialization
         void Start()
         {
-            if (this.tag == "ggg")
+            if (this.tag == "finger")
                 GetJoints();
 
             ErrorFunction = DistanceFromTarget;
@@ -86,10 +86,10 @@ namespace ENTICourse.IK
             Solution = new float[Joints.Length];
         }
 
-        
 
-    // Update is called once per frame
-    void Update()
+
+        // Update is called once per frame
+        void Update()
         {
             target = Destination.transform.position;
             //ApproachTarget(target);
@@ -156,21 +156,24 @@ namespace ENTICourse.IK
         public PositionRotation ForwardKinematics(float[] Solution)
         {
             Vector3 prevPoint = Joints[0].transform.position;
-
-
+            
             // Takes object initial rotation into account
-            Quaternion rotation = transform.rotation;
+            QuaternionClass rotation = new QuaternionClass();
+            rotation.SetValues(transform.rotation);
             for (int i = 1; i < Joints.Length; i++)
             {
-                rotation *= Quaternion.AngleAxis(Solution[i - 1], Joints[i - 1].Axis);
-                Vector3 nextPoint = prevPoint + rotation * Joints[i].StartOffset;
+                QuaternionClass angleAxis = new QuaternionClass();
+                angleAxis.convertFromAxisAngle(Joints[i - 1].Axis, Solution[i - 1]);
+
+                rotation *= angleAxis;
+
+                Vector3 nextPoint = prevPoint + rotation.multiplyVec3(rotation, Joints[i].StartOffset);
 
                 if (DebugDraw)
                     Debug.DrawLine(prevPoint, nextPoint, Color.blue);
 
                 prevPoint = nextPoint;
             }
-
 
             // The end of the effector
             return new PositionRotation(prevPoint, rotation);
@@ -180,8 +183,7 @@ namespace ENTICourse.IK
             Destination = newtarget;
         }
 
-        
+
     }
 
-    
 }

@@ -62,7 +62,9 @@ public class SceneManager : MonoBehaviour
         }
         if (statusSimulation == States.simulationNoHand && timer > timeToStopSimulation) //la mano se dirige a la posicion predict
         {
-            target.position = pendulum.CalculateFuturePosition(timeToPredictStopPosition);
+            Vector3Class tPos = new Vector3Class();
+            tPos = pendulum.CalculateFuturePosition(timeToPredictStopPosition);
+            target.position = tPos.GetValues();
             roboticHand.NewDestination(target);
             timer = 0;
             statusSimulation = States.closeHand;

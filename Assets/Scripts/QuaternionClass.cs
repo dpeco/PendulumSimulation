@@ -18,13 +18,19 @@ public class QuaternionClass
     }
     public QuaternionClass(float a, float b, float c, float d)
     {
-        w = a;
-        x = b;
-        y = c;
-        z = d;
+        x = a;
+        y = b;
+        z = c;
+        w = d;
     }
-
-    QuaternionClass multiply(QuaternionClass q1, QuaternionClass q2)
+    public QuaternionClass(Quaternion quat)
+    {
+        x = quat.x;
+        y = quat.y;
+        z = quat.z;
+        w = quat.w;
+    }
+    public QuaternionClass multiply(QuaternionClass q2, QuaternionClass q1)
     {
         QuaternionClass q3 = new QuaternionClass();
         q3.w = q1.w * q2.w - q1.x * q2.x - q1.y * q2.y - q1.z * q2.z;
@@ -34,7 +40,32 @@ public class QuaternionClass
 
         return q3;
     }
-    QuaternionClass inverse(QuaternionClass q1)
+    public Vector3 multiplyVec3(QuaternionClass quat, Vector3 vec)
+    {
+        Vector3 temp;
+
+        //rotation matrix
+        float xPart1 = 1 - 2 * Mathf.Pow(quat.y, 2) - 2 * Mathf.Pow(quat.z, 2);
+        float xPart2 = 2 * quat.x * quat.y - 2 * quat.z * quat.w;
+        float xPart3 = 2 * quat.x * quat.z + 2 * quat.y * quat.w;
+
+        float yPart1 = 2 * quat.x * quat.y + 2 * quat.z * quat.w;
+        float yPart2 = 1 - 2 * Mathf.Pow(quat.x, 2) - 2 * Mathf.Pow(quat.z, 2);
+        float yPart3 = 2 * quat.y * quat.z - 2 * quat.x * quat.w;
+
+        float zPart1 = 2 * quat.x * quat.z - 2 * quat.y * quat.w;
+        float zPart2 = 2 * quat.y * quat.z + 2 * quat.x * quat.w;
+        float zPart3 = 1 - 2 * Mathf.Pow(quat.x, 2) - 2 * Mathf.Pow(quat.y, 2);
+
+        //calculo vector
+        temp.x = xPart1 * vec.x + xPart2 * vec.y + xPart3 * vec.z;
+        temp.y = yPart1 * vec.x + yPart2 * vec.y + yPart3 * vec.z;
+        temp.z = zPart1 * vec.x + zPart2 * vec.y + zPart3 * vec.z;
+
+        return temp;
+
+    }
+    public QuaternionClass inverse(QuaternionClass q1)
     {
         QuaternionClass q2 = new QuaternionClass();
 
@@ -45,7 +76,7 @@ public class QuaternionClass
         q2.z = -q1.z;
         return multiply(q1, q2);
     }
-    void convertFromAxisAngle(Vector3 axis, float a)
+    public void convertFromAxisAngle(Vector3 axis, float a)
     {
 
         a = a / 360 * (float)Mathf.PI * 2;
@@ -56,7 +87,7 @@ public class QuaternionClass
         z = axis.z * Mathf.Sin(a / 2);
 
     }
-    void convertToAxisAngle(QuaternionClass q1)
+    public void convertToAxisAngle(QuaternionClass q1)
     {
         float a;
         Vector3 axis;
@@ -67,8 +98,31 @@ public class QuaternionClass
         axis.z = q1.z / Mathf.Sqrt(1 - Mathf.Pow(q1.w, 2));
 
     }
-    Vector3 rotation()
+    public Vector3Class rotation()
     {
-        return new Vector3(x, y, z);
+        return new Vector3Class(x, y, z);
+    }
+
+    public void SetValues(Quaternion quat)
+    {
+        x = quat.x;
+        y = quat.y;
+        z = quat.z;
+        w = quat.w;
+    }
+    public Quaternion GetValues()
+    {
+        return new Quaternion(x, y, z, w);
+    }
+
+    public static QuaternionClass operator *(QuaternionClass q2, QuaternionClass q1)
+    {
+        QuaternionClass q3 = new QuaternionClass();
+        q3.w = q1.w * q2.w - q1.x * q2.x - q1.y * q2.y - q1.z * q2.z;
+        q3.x = q1.w * q2.x + q1.x * q2.w - q1.y * q2.z + q1.z * q2.y;
+        q3.y = q1.w * q2.y + q1.x * q2.z + q1.y * q2.w - q1.z * q2.x;
+        q3.z = q1.w * q2.z - q1.x * q2.y + q1.y * q2.x - q1.z * q2.w;
+
+        return q3;
     }
 }

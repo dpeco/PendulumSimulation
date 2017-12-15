@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Pendulo : MonoBehaviour {
+public class Pendulo : MonoBehaviour
+{
 
     public bool move;
 
@@ -30,25 +31,27 @@ public class Pendulo : MonoBehaviour {
     public bool method;
 
     // Use this for initialization
-    void Start ()
+    void Start()
     {
         if (method)
         {
             initAngularVelX /= Mathf.Rad2Deg;
             initAngularVelZ /= Mathf.Rad2Deg;
         }
-        print(transform.rotation.eulerAngles.y);
-        Vector3 stringVector = pos2.position - pos1.position;
+
+        Vector3Class p1 = new Vector3Class(pos1.position);
+        Vector3Class p2 = new Vector3Class(pos2.position);
+        Vector3Class stringVector = (p2 - p1);
 
         initAngleX = transform.localEulerAngles.x;
         initAngleZ = transform.localEulerAngles.z;
-        
+
         curAngleX = initAngleX * Mathf.Deg2Rad;
         curAngularVelX = initAngularVelX;
 
         curAngleZ = initAngleZ * Mathf.Deg2Rad;
         curAngularVelZ = initAngularVelZ;
-        stringDistance = stringVector.magnitude;
+        stringDistance = stringVector.Size();
         //regula angulos
         if (curAngleX > Mathf.PI)
         {
@@ -71,11 +74,12 @@ public class Pendulo : MonoBehaviour {
             curAngleZ += 2 * Mathf.PI;
             print("xd");
         }
-        
+
     }
 
     // Update is called once per frame
-    void FixedUpdate () {
+    void FixedUpdate()
+    {
         if (move)
         {
             time += Time.deltaTime;
@@ -117,21 +121,21 @@ public class Pendulo : MonoBehaviour {
 
             else
             {
-                Vector3 stringVector = pos2.position - pos1.position;
-                /*
-                Vector3 projectedX = (Mathf.Abs(Vector3.Dot(stringVector, planeXY)) / Mathf.Abs(Vector3.Dot(planeXY, planeXY))) * planeXY;
-                Vector3 projectedZ = (Mathf.Abs(Vector3.Dot(stringVector, planeZY)) / Mathf.Abs(Vector3.Dot(planeZY, planeZY))) * planeZY;
-                */
-                Vector3 stringX = stringVector;
+                Vector3Class p1 = new Vector3Class(pos1.position);
+                Vector3Class p2 = new Vector3Class(pos2.position);
+                Vector3Class stringVector = (p2 - p1);
+
+
+                Vector3Class stringX = new Vector3Class(stringVector.x, stringVector.y, stringVector.z);
                 stringX.x = 0;
-                Vector3 stringZ = stringVector;
+                Vector3Class stringZ = new Vector3Class(stringVector.x, stringVector.y, stringVector.z);
                 stringZ.z = 0;
 
-                float glX = gravity / stringX.magnitude;
-                float glZ = gravity / stringZ.magnitude;
+                float glX = gravity / stringX.Size();
+                float glZ = gravity / stringZ.Size();
 
-                float dragX = cDrag / stringX.magnitude * curAngularVelX;
-                float dragZ = cDrag / stringZ.magnitude * curAngularVelZ;
+                float dragX = cDrag / stringX.Size() * curAngularVelX;
+                float dragZ = cDrag / stringZ.Size() * curAngularVelZ;
 
                 //calculo numerico pendulo
                 curAngularVelX += Time.deltaTime * ((-1 * glX * Mathf.Sin(curAngleX)) - dragX);
@@ -168,7 +172,7 @@ public class Pendulo : MonoBehaviour {
         }
     }
 
-    public Vector3 CalculateFuturePosition(float seconds)
+    public Vector3Class CalculateFuturePosition(float seconds)
     {
 
         float timeCalc = 0;
@@ -184,18 +188,21 @@ public class Pendulo : MonoBehaviour {
         {
             timeCalc += Time.deltaTime;
 
-            Vector3 stringVector = pos2.position - pos1.position;
+            Vector3Class p1 = new Vector3Class(pos1.position);
+            Vector3Class p2 = new Vector3Class(pos2.position);
+            Vector3Class stringVector = (p2 - p1);
 
-            Vector3 stringX = stringVector;
+
+            Vector3Class stringX = new Vector3Class(stringVector.x, stringVector.y, stringVector.z);
             stringX.x = 0;
-            Vector3 stringZ = stringVector;
+            Vector3Class stringZ = new Vector3Class(stringVector.x, stringVector.y, stringVector.z);
             stringZ.z = 0;
 
-            float glX = gravity / stringX.magnitude;
-            float glZ = gravity / stringZ.magnitude;
+            float glX = gravity / stringX.Size();
+            float glZ = gravity / stringZ.Size();
 
-            float dragX = cDrag / stringX.magnitude * tempAngularVelX;
-            float dragZ = cDrag / stringZ.magnitude * tempAngularVelZ;
+            float dragX = cDrag / stringX.Size() * curAngularVelX;
+            float dragZ = cDrag / stringZ.Size() * curAngularVelZ;
 
             //calculo numerico pendulo
             tempAngularVelX += Time.deltaTime * ((-1 * glX * Mathf.Sin(tempAngleX)) - dragX);
@@ -229,7 +236,7 @@ public class Pendulo : MonoBehaviour {
 
             transform.localEulerAngles = new Vector3(tempAngleX * Mathf.Rad2Deg, 0, tempAngleZ * Mathf.Rad2Deg);
         }
-        Vector3 predictedTarget = pos2.position;
+        Vector3Class predictedTarget = new Vector3Class(pos2.position);
         transform.localEulerAngles = initAngles;
         return predictedTarget;
     }
