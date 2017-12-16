@@ -76,6 +76,7 @@ public class Vector3Class
         v3.z = v1.z + v2.z;
         return v3;
     }
+    
     public static Vector3Class operator -(Vector3Class v1, Vector3Class v2)
     {
         Vector3Class v3 = new Vector3Class();
@@ -86,11 +87,10 @@ public class Vector3Class
     }
     public static Vector3Class operator *(Vector3Class v, float scalar)
     {
-        Vector3Class result = new Vector3Class();
-        result.x *= scalar;
-        result.y *= scalar;
-        result.z *= scalar;
-        return result;
+        v.x *= scalar;
+        v.y *= scalar;
+        v.z *= scalar;
+        return v;
     }
 
 }
