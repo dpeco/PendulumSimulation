@@ -45,6 +45,7 @@ namespace ENTICourse.IK
         [Header("Destination")]
         public Transform Effector;
         [Space]
+        public Transform Pendulum;
         public Transform Destination;
         public float DistanceFromDestination;
         private Vector3Class target;
@@ -80,7 +81,7 @@ namespace ENTICourse.IK
             ErrorFunction = DistanceFromTarget;
         }
 
-        public void GetJoints()
+        public void GetJoints() //Rellenar la solución de coordenadas de los joints
         {
             Joints = BaseJoint.GetComponentsInChildren<RobotJoint>();
             Solution = new float[Joints.Length];
@@ -91,7 +92,23 @@ namespace ENTICourse.IK
         // Update is called once per frame
         void Update()
         {
-            target = new Vector3Class(Destination.transform.position);
+            //Algunos ajustes para que la mano se posicione relativamente del target con mas realismo
+            Vector3Class P = new Vector3Class(Effector.transform.position); //Joints[0].transform.position ??
+            Vector3Class Q = new Vector3Class(Destination.transform.position);
+
+            //Debug.Log("posicion mano x" + P.x + "y" + P.y + "z" + P.z);
+            //Debug.Log("posicion pendulo x" + Q.x + "y" + Q.y + "z" + Q.z);
+
+            //Normalizar distancia de Q(Pendulo) a P(Effector) y multiplicar por el radio de la bola del pendulo + offset adicional de ajuste para obtener el offset del target total:
+            Vector3Class offsetTarget = P - Q;
+            //Debug.Log("x" + offsetTarget.x + "y" + offsetTarget.y + "z" + offsetTarget.z);
+
+            float totalOffset = Pendulum.GetComponent<SphereCollider>().radius + 1;//<-Poner aqui un offset adicional... En realidad sería la mitad del grosor de la mano si el endefector HAND estuviese justo a la mitad.
+            offsetTarget = offsetTarget.Normalize(offsetTarget) * totalOffset;
+
+            target = offsetTarget; //Actualiza posicion del objetivo
+
+            
             //ApproachTarget(target);
             //ForwardKinematics(Solution);
 
@@ -102,7 +119,7 @@ namespace ENTICourse.IK
                 ApproachTarget(target);
                 for (int i = 0; i < Joints.Length; i++)
                 {
-                    Joints[i].MoveArm(Solution[i]);
+                    Joints[i].MoveArm(Solution[i]); //Mueve el brazo, aplicando la solucion de cada joint a cada joint
                 }
             }
 
@@ -113,7 +130,7 @@ namespace ENTICourse.IK
             }
         }
 
-        public void ApproachTarget(Vector3Class target)
+        public void ApproachTarget(Vector3Class target) //Genera la solucion de posiciones de los joints de todo el brazo, acercandola al target objetivo.
         {
             for (int i = 0; i < Solution.Length; i++)
             {
