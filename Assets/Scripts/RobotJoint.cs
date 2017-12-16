@@ -11,18 +11,19 @@ namespace ENTICourse.IK
 
         [Header("Joint Limits")]
         // A single 1, which is the axes of movement
-        public Vector3 Axis;
+        public Vector3 AxisVec;
+        public Vector3Class Axis;
         public float MinAngle;
         public float MaxAngle;
 
         [Header("Initial position")]
         // The offset at resting position
 
-        public Vector3 StartOffset;
+        public Vector3Class StartOffset;
 
         // The initial one
 
-        public Vector3 ZeroEuler;
+        public Vector3Class ZeroEuler;
         
 
         [Header("Movement")]
@@ -37,8 +38,9 @@ namespace ENTICourse.IK
 
         void Awake()
         {
-            ZeroEuler = transform.localEulerAngles;
-            StartOffset = transform.localPosition;
+            Axis = new Vector3Class(AxisVec);
+            ZeroEuler = new Vector3Class(transform.localEulerAngles);
+            StartOffset = new Vector3Class(transform.localPosition);
         }
 
         // Update is called once per frame

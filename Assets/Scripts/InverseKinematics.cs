@@ -6,21 +6,21 @@ namespace ENTICourse.IK
 {
 
     // A typical error function to minimise
-    public delegate float ErrorFunction(Vector3 target, float[] solution);
+    public delegate float ErrorFunction(Vector3Class target, float[] solution);
 
     public struct PositionRotation
     {
-        Vector3 position;
+        Vector3Class position;
         QuaternionClass rotation;
 
-        public PositionRotation(Vector3 position, QuaternionClass rotation)
+        public PositionRotation(Vector3Class position, QuaternionClass rotation)
         {
             this.position = position;
             this.rotation = rotation;
         }
 
         // PositionRotation to Vector3
-        public static implicit operator Vector3(PositionRotation pr)
+        public static implicit operator Vector3Class(PositionRotation pr)
         {
             return pr.position;
         }
@@ -47,7 +47,7 @@ namespace ENTICourse.IK
         [Space]
         public Transform Destination;
         public float DistanceFromDestination;
-        private Vector3 target;
+        private Vector3Class target;
 
         [Header("Inverse Kinematics")]
         [Range(0, 1f)]
@@ -91,7 +91,7 @@ namespace ENTICourse.IK
         // Update is called once per frame
         void Update()
         {
-            target = Destination.transform.position;
+            target = new Vector3Class(Destination.transform.position);
             //ApproachTarget(target);
             //ForwardKinematics(Solution);
 
@@ -108,12 +108,12 @@ namespace ENTICourse.IK
 
             if (DebugDraw)
             {
-                Debug.DrawLine(Effector.transform.position, target, Color.green);
-                Debug.DrawLine(Destination.transform.position, target, new Color(0, 0.5f, 0));
+                Debug.DrawLine(Effector.transform.position, target.GetValues(), Color.green);
+                Debug.DrawLine(Destination.transform.position, target.GetValues(), new Color(0, 0.5f, 0));
             }
         }
 
-        public void ApproachTarget(Vector3 target)
+        public void ApproachTarget(Vector3Class target)
         {
             for (int i = 0; i < Solution.Length; i++)
             {
@@ -125,7 +125,7 @@ namespace ENTICourse.IK
         }
 
 
-        public float CalculateGradient(Vector3 target, float[] Solution, int i, float delta)
+        public float CalculateGradient(Vector3Class target, float[] Solution, int i, float delta)
         {
             float gradient;
 
@@ -142,10 +142,10 @@ namespace ENTICourse.IK
         }
 
         // Returns the distance from the target, given a solution
-        public float DistanceFromTarget(Vector3 target, float[] Solution)
+        public float DistanceFromTarget(Vector3Class target, float[] Solution)
         {
-            Vector3 point = ForwardKinematics(Solution);
-            return Vector3.Distance(point, target);
+            Vector3Class point = ForwardKinematics(Solution);
+            return point.Distance(point, target);
         }
 
 
@@ -155,7 +155,7 @@ namespace ENTICourse.IK
 
         public PositionRotation ForwardKinematics(float[] Solution)
         {
-            Vector3 prevPoint = Joints[0].transform.position;
+            Vector3Class prevPoint = new Vector3Class(Joints[0].transform.position);
             
             // Takes object initial rotation into account
             QuaternionClass rotation = new QuaternionClass();
@@ -166,11 +166,10 @@ namespace ENTICourse.IK
                 angleAxis.convertFromAxisAngle(Joints[i - 1].Axis, Solution[i - 1]);
 
                 rotation *= angleAxis;
-
-                Vector3 nextPoint = prevPoint + rotation.multiplyVec3(rotation, Joints[i].StartOffset);
+                Vector3Class nextPoint = prevPoint + rotation.multiplyVec3(rotation, Joints[i].StartOffset);
 
                 if (DebugDraw)
-                    Debug.DrawLine(prevPoint, nextPoint, Color.blue);
+                    Debug.DrawLine(prevPoint.GetValues(), nextPoint.GetValues(), Color.blue);
 
                 prevPoint = nextPoint;
             }

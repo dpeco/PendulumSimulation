@@ -40,9 +40,9 @@ public class QuaternionClass
 
         return q3;
     }
-    public Vector3 multiplyVec3(QuaternionClass quat, Vector3 vec)
+    public Vector3Class multiplyVec3(QuaternionClass quat, Vector3Class vec)
     {
-        Vector3 temp;
+        Vector3Class temp = new Vector3Class();
 
         //rotation matrix
         float xPart1 = 1 - 2 * Mathf.Pow(quat.y, 2) - 2 * Mathf.Pow(quat.z, 2);
@@ -76,7 +76,7 @@ public class QuaternionClass
         q2.z = -q1.z;
         return multiply(q1, q2);
     }
-    public void convertFromAxisAngle(Vector3 axis, float a)
+    public void convertFromAxisAngle(Vector3Class axis, float a)
     {
 
         a = a / 360 * (float)Mathf.PI * 2;
