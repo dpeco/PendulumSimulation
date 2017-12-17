@@ -30,11 +30,13 @@ public class SceneManager : MonoBehaviour
     void Start()
     {
         pendulum.GetComponent<Pendulo>();
-        pendulum.SetMove(false);
         roboticHand.GetComponent<ENTICourse.IK.InverseKinematics>();
+
+        pendulum.SetMove(false);
         timer = 0;
         statusSimulation = States.done;
         roboticHand.NewDestination(defHandPos);
+
         initStopTime = timeToPredictStopPosition;
         openedHands = false;
         roboticHand.perfFollow = false;
@@ -86,14 +88,15 @@ public class SceneManager : MonoBehaviour
             bool reachable = false;
 
             Vector3Class tPos = pendulum.CalculateFuturePosition(timeToPredictStopPosition);
-
             Vector3Class baseHandPos = new Vector3Class(roboticHand.transform.position);
             while (!reachable)
             {
-                if (tPos.Distance(tPos, baseHandPos) < 3.0f)
+                tPos = pendulum.CalculateFuturePosition(timeToPredictStopPosition);
+
+                if (tPos.Distance(tPos, baseHandPos) < 2.5f)
                     reachable = true;
                 else
-                    timeToPredictStopPosition += 1.0f;
+                    timeToPredictStopPosition += 0.5f;
             }
             target.position = tPos.GetValues();
             roboticHand.NewDestination(target);
