@@ -60,7 +60,7 @@ namespace ENTICourse.IK
         public float StopThreshold = 0.1f; // If closer than this, it stops
         [Range(0, 10f)]
         public float SlowdownThreshold = 0.25f; // If closer than this, it linearly slows down
-
+        public bool perfFollow;
 
         public ErrorFunction ErrorFunction;
 
@@ -96,9 +96,9 @@ namespace ENTICourse.IK
             if (this.tag == "arm")
             {
                 //Algunos ajustes para que la mano se posicione relativamente del target con mas realismo
-                Vector3Class P = new Vector3Class(Effector.transform.position); //Joints[0].transform.position ??
+                Vector3Class P = new Vector3Class(BaseJoint.transform.position); //Joints[0].transform.position ??
                 Vector3Class Q = new Vector3Class(Destination.transform.position);
-
+                
                 //Debug.Log("posicion mano x" + P.x + "y" + P.y + "z" + P.z);
                 //Debug.Log("posicion pendulo x" + Q.x + "y" + Q.y + "z" + Q.z);
 
@@ -106,21 +106,41 @@ namespace ENTICourse.IK
                 Vector3Class offsetTarget = Q - P;
                 //Debug.Log("x" + offsetTarget.x + "y" + offsetTarget.y + "z" + offsetTarget.z);
 
-                float totalOffset = 0.2f;//<-Poner aqui un offset adicional... En realidad sería la mitad del grosor de la mano si el endefector HAND estuviese justo a la mitad.
+                float totalOffset = 0.3f;//<-Poner aqui un offset adicional... En realidad sería la mitad del grosor de la mano si el endefector HAND estuviese justo a la mitad.
                 offsetTarget = offsetTarget.Normalize(offsetTarget) * (offsetTarget.Size() - totalOffset);
-                target = offsetTarget + P; //Actualiza posicion del objetivo
+                offsetTarget += P; //Actualiza posicion del objetivo
+                offsetTarget.y = target.y;
+                target = offsetTarget;
             }
             //ApproachTarget(target);
             //ForwardKinematics(Solution);
 
-
-
-            if (ErrorFunction(target, Solution) > StopThreshold)
+            if (perfFollow && tag == "arm")
             {
-                ApproachTarget(target);
-                for (int i = 0; i < Joints.Length; i++)
+                int counterWhile = 0;
+                while (counterWhile < 20)
                 {
-                    Joints[i].MoveArm(Solution[i]);
+                    counterWhile++;
+                    if (ErrorFunction(target, Solution) > StopThreshold)
+                    {
+                        ApproachTarget(target);
+                        for (int i = 0; i < Joints.Length; i++)
+                        {
+                            Joints[i].MoveArm(Solution[i]);
+                        }
+                    }
+                    else break;
+                }
+            }
+            else
+            {
+                if (ErrorFunction(target, Solution) > StopThreshold)
+                {
+                    ApproachTarget(target);
+                    for (int i = 0; i < Joints.Length; i++)
+                    {
+                        Joints[i].MoveArm(Solution[i]);
+                    }
                 }
             }
 

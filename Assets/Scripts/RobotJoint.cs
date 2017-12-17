@@ -32,10 +32,7 @@ namespace ENTICourse.IK
         public float SlowdownThreshold = 0.5f;
         [Range(0, 500f)]
         public float Speed = 1f; // Degrees per second
-
-
-
-
+        
         void Awake()
         {
             Axis = new Vector3Class(AxisVec);

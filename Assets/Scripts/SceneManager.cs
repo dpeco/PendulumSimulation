@@ -23,52 +23,84 @@ public class SceneManager : MonoBehaviour
     public Transform target;
 
     public ENTICourse.IK.InverseKinematics[] fingers;
-
+    
+    private float initStopTime;
+    private bool openedHands;
+    Vector3Class pepe;
     void Start()
     {
         pendulum.GetComponent<Pendulo>();
         pendulum.SetMove(false);
         roboticHand.GetComponent<ENTICourse.IK.InverseKinematics>();
         timer = 0;
-        statusSimulation = States.init;
-        roboticHand.NewDestination(pendulum.GetBall());
-
-        for(int i = 0; i < 5; i++)
-        {
-            fingers[i].GetComponent<FingerManager>().CloseHand();
-        }
+        statusSimulation = States.done;
+        roboticHand.NewDestination(defHandPos);
+        initStopTime = timeToPredictStopPosition;
+        openedHands = false;
+        roboticHand.perfFollow = false;
     }
 
     // Update is called once per frame
     void Update()
     {
-        timer += Time.deltaTime;
+        if (statusSimulation != States.done)
+         timer += Time.deltaTime;
+
+        if (Input.GetKeyDown("space") && statusSimulation == States.done)
+        {
+            statusSimulation = States.init;
+            roboticHand.NewDestination(pendulum.GetBall());
+            for (int i = 0; i < 5; i++)
+            {
+                fingers[i].GetComponent<FingerManager>().CloseHand();
+            }
+        }
 
         if (statusSimulation == States.init && timer > timeToStartSimulation) //empieza movimiento pendulo con la mano
         {
             pendulum.SetMove(true);
+            roboticHand.perfFollow = true;
             timer = 0;
             statusSimulation = States.simulationHandFollow;
         }
-        if (statusSimulation == States.simulationHandFollow && timer > timeToStopHandFollow) //la mano deja de seguir al pendulo
+
+        if (statusSimulation == States.simulationHandFollow && timer > timeToStopHandFollow - 0.2f && !openedHands) //la mano empieza a soltar la bola
         {
-            target = defHandPos;
-            roboticHand.NewDestination(target);
-            statusSimulation = States.simulationNoHand;
+            openedHands = true;
             for (int i = 0; i < 5; i++)
             {
                 fingers[i].GetComponent<FingerManager>().OpenHand();
             }
         }
+
+        if (statusSimulation == States.simulationHandFollow && timer > timeToStopHandFollow) //la mano deja de seguir al pendulo
+        {
+            roboticHand.perfFollow = false;
+            target.position = defHandPos.position;
+            roboticHand.NewDestination(target);
+            statusSimulation = States.simulationNoHand;
+        }
+
         if (statusSimulation == States.simulationNoHand && timer > timeToStopSimulation) //la mano se dirige a la posicion predict
         {
-            Vector3Class tPos = new Vector3Class();
-            tPos = pendulum.CalculateFuturePosition(timeToPredictStopPosition);
+            bool reachable = false;
+
+            Vector3Class tPos = pendulum.CalculateFuturePosition(timeToPredictStopPosition);
+
+            Vector3Class baseHandPos = new Vector3Class(roboticHand.transform.position);
+            while (!reachable)
+            {
+                if (tPos.Distance(tPos, baseHandPos) < 3.0f)
+                    reachable = true;
+                else
+                    timeToPredictStopPosition += 1.0f;
+            }
             target.position = tPos.GetValues();
             roboticHand.NewDestination(target);
             timer = 0;
             statusSimulation = States.closeHand;
         }
+
         if (statusSimulation == States.closeHand && timer > timeToPredictStopPosition - 0.3f) //se para el pendulo
         {
             statusSimulation = States.stopPendulum;
@@ -77,10 +109,13 @@ public class SceneManager : MonoBehaviour
                 fingers[i].GetComponent<FingerManager>().CloseHand();
             }
         }
+
         if (statusSimulation == States.stopPendulum && timer > timeToPredictStopPosition) //se para el pendulo
         {
             pendulum.SetMove(false);
+            timeToPredictStopPosition = initStopTime;
             statusSimulation = States.done;
+            openedHands = false;
         }
     }
 }
