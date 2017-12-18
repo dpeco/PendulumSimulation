@@ -93,14 +93,11 @@ namespace ENTICourse.IK
         {
             target = new Vector3Class(Destination.transform.position);
 
-            if (this.tag == "arm")
+            if (this.tag == "offset")
             {
                 //Algunos ajustes para que la mano se posicione relativamente del target con mas realismo
                 Vector3Class P = new Vector3Class(BaseJoint.transform.position); //Joints[0].transform.position ??
                 Vector3Class Q = new Vector3Class(Destination.transform.position);
-                
-                //Debug.Log("posicion mano x" + P.x + "y" + P.y + "z" + P.z);
-                //Debug.Log("posicion pendulo x" + Q.x + "y" + Q.y + "z" + Q.z);
 
                 //Normalizar distancia de Q(Pendulo) a P(Effector) y multiplicar por el radio de la bola del pendulo + offset adicional de ajuste para obtener el offset del target total:
                 Vector3Class offsetTarget = Q - P;
@@ -158,7 +155,6 @@ namespace ENTICourse.IK
                 float pendent = CalculateGradient(target, Solution, i, DeltaGradient);
                 Solution[i] -= LearningRate * pendent;
             }
-
 
         }
 

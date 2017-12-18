@@ -93,7 +93,7 @@ public class SceneManager : MonoBehaviour
             {
                 tPos = pendulum.CalculateFuturePosition(timeToPredictStopPosition);
 
-                if (tPos.Distance(tPos, baseHandPos) < 2.5f)
+                if (tPos.Distance(tPos, baseHandPos) < 2.2f)
                     reachable = true;
                 else
                     timeToPredictStopPosition += 0.5f;
