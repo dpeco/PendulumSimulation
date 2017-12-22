@@ -39,7 +39,7 @@ public class Vector3Class
     }
     public float DotProduct(Vector3Class v1, Vector3Class v2)
     {
-        return (v1.x * v2.x) + (v1.y + v2.y) + (v1.z + v2.z); ;
+        return (v1.x * v2.x) + (v1.y + v2.y) + (v1.z + v2.z);
     }
     public Vector3Class CrossProduct(Vector3Class v1, Vector3Class v2)
     {
@@ -87,10 +87,8 @@ public class Vector3Class
     }
     public static Vector3Class operator *(Vector3Class v, float scalar)
     {
-        v.x *= scalar;
-        v.y *= scalar;
-        v.z *= scalar;
-        return v;
+        Vector3Class vr = new Vector3Class(v.x * scalar, v.y * scalar, v.z * scalar);
+        return vr;
     }
 
 }
