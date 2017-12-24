@@ -166,6 +166,9 @@ public class Pendulo : MonoBehaviour
                     curAngleZ += 2 * Mathf.PI;
                     print("xd");
                 }
+                Vector3Class angularVec = new Vector3Class(curAngularVelX, 0, curAngularVelZ);
+                angularVec = angularVec.CrossProduct(angularVec, stringVector);
+                Debug.DrawRay(pos2.position, angularVec.GetValues(), Color.blue);
 
                 transform.localEulerAngles = new Vector3(curAngleX * Mathf.Rad2Deg, 0, curAngleZ * Mathf.Rad2Deg); ;
             }
