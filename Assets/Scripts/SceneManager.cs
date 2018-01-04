@@ -8,6 +8,7 @@ public class SceneManager : MonoBehaviour
     public Pendulo pendulum;
     public ENTICourse.IK.InverseKinematics roboticHand;
 
+    public bool startSimulation = false;
 
     public float timeToStartSimulation;
     public float timeToStopHandFollow;
@@ -48,8 +49,9 @@ public class SceneManager : MonoBehaviour
         if (statusSimulation != States.done)
          timer += Time.deltaTime;
 
-        if (Input.GetKeyDown("space") && statusSimulation == States.done)
+        if (startSimulation /*Input.GetKeyDown("space")*/ && statusSimulation == States.done)
         {
+            startSimulation = false;
             statusSimulation = States.init;
             roboticHand.NewDestination(pendulum.GetBall());
             for (int i = 0; i < 5; i++)
@@ -120,6 +122,10 @@ public class SceneManager : MonoBehaviour
             statusSimulation = States.done;
             openedHands = false;
         }
+    }
+
+    void startTheSimulation() {
+        startSimulation = true;
     }
 }
 
