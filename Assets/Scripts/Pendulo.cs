@@ -252,4 +252,60 @@ public class Pendulo : MonoBehaviour
     {
         return pos2;
     }
+    public void ResetPendulum()
+    {
+        if (method)
+        {
+            initAngularVelX /= Mathf.Rad2Deg;
+            initAngularVelZ /= Mathf.Rad2Deg;
+        }
+
+        Vector3Class p1 = new Vector3Class(pos1.position);
+        Vector3Class p2 = new Vector3Class(pos2.position);
+        Vector3Class stringVector = (p2 - p1);
+
+        initAngleX = transform.localEulerAngles.x;
+        initAngleZ = transform.localEulerAngles.z;
+
+        curAngleX = initAngleX * Mathf.Deg2Rad;
+        curAngularVelX = initAngularVelX;
+
+        curAngleZ = initAngleZ * Mathf.Deg2Rad;
+        curAngularVelZ = initAngularVelZ;
+        stringDistance = stringVector.Size();
+        //regula angulos
+        if (curAngleX > Mathf.PI)
+        {
+            curAngleX -= 2 * Mathf.PI;
+            print("xd");
+        }
+        if (curAngleX < -Mathf.PI)
+        {
+            curAngleX += 2 * Mathf.PI;
+            print("xd");
+        }
+
+        if (curAngleZ > Mathf.PI)
+        {
+            curAngleZ -= 2 * Mathf.PI;
+            print("xd");
+        }
+        if (curAngleZ < -Mathf.PI)
+        {
+            curAngleZ += 2 * Mathf.PI;
+            print("xd");
+        }
+    }
+    public void NewPendulumAngle(Vector3Class angle)
+    {
+        transform.localEulerAngles = angle.GetValues();
+    }
+    public void SetAngularVelX(float value)
+    {
+        initAngularVelX = value;
+    }
+    public void SetAngularVelZ(float value)
+    {
+        initAngularVelZ = value;
+    }
 }
