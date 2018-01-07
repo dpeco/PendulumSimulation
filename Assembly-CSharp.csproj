@@ -54,9 +54,8 @@
      <Compile Include="Assets\Scripts\CameraScript.cs" />
      <Compile Include="Assets\Scripts\CanvasScript.cs" />
      <Compile Include="Assets\Scripts\elasticScripts\CilinderBody.cs" />
+     <Compile Include="Assets\Scripts\elasticScripts\ElasticSceneManager.cs" />
      <Compile Include="Assets\Scripts\elasticScripts\PendulumElastic.cs" />
-     <Compile Include="Assets\Scripts\elasticScripts\RopeControllerRealistic.cs" />
-     <Compile Include="Assets\Scripts\elasticScripts\RopeSection.cs" />
      <Compile Include="Assets\Scripts\FingerManager.cs" />
      <Compile Include="Assets\Scripts\InverseKinematics.cs" />
      <Compile Include="Assets\Scripts\Pendulo.cs" />

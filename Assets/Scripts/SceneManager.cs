@@ -124,7 +124,7 @@ public class SceneManager : MonoBehaviour
         }
     }
 
-    void startTheSimulation() {
+    void StartTheSimulation() {
         startSimulation = true;
     }
 }

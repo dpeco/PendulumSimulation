@@ -2,30 +2,16 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CilinderBody : MonoBehaviour {
+public struct CilinderBody {
     
     public Vector3Class pos;
     public Vector3Class speed;
-    public Vector3Class force;
-    public Vector3 initForce;
-    public float mass;
-	void Start () {
-        pos = new Vector3Class(this.transform.position);
-        speed = new Vector3Class(0, 0 ,0);
-        force = new Vector3Class(initForce);
-	}
-	public void resetForce(float gravity)
+    public Vector3Class acc;
+
+    public CilinderBody(Vector3Class position)
     {
-        force = new Vector3Class(0, gravity, 0);
+        pos = position;
+        speed = new Vector3Class();
+        acc = new Vector3Class();
     }
-    public void ManualUpdate()
-    {
-        speed += force * Time.deltaTime;
-        pos += speed * Time.deltaTime;
-        transform.position = pos.GetValues();
-    }
-	// Update is called once per frame
-	void Update () {
-		
-	}
 }

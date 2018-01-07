@@ -90,5 +90,9 @@ public class Vector3Class
         Vector3Class vr = new Vector3Class(v.x * scalar, v.y * scalar, v.z * scalar);
         return vr;
     }
-
+    public static Vector3Class operator /(Vector3Class v, float scalar)
+    {
+        Vector3Class vr = new Vector3Class(v.x / scalar, v.y / scalar, v.z / scalar);
+        return vr;
+    }
 }
