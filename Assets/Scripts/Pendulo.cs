@@ -312,4 +312,8 @@ public class Pendulo : MonoBehaviour
     {
         gravity = value;
     }
+    public void SetFriction(float value)
+    {
+        cDrag = value;
+    }
 }

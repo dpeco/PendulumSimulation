@@ -12,14 +12,17 @@ public class CanvasScript : MonoBehaviour {
     public Dropdown sceneChoice;
 
     public Toggle eulerToggle;
+    public Camera theCamera;
 
     public Slider gravitySlider;
+    public Slider frictionSlider;
     public Slider initAngleXSlider;
 	public Slider initAngleZSlider;
 	public Slider initVelXSlider;
 	public Slider initVelZSlider;
 
     public InputField gravInput;
+    public InputField fricInput;
     public InputField inAngleXInput;
     public InputField inAngleZInput;
     public InputField inAngleVelXInput;
@@ -36,17 +39,19 @@ public class CanvasScript : MonoBehaviour {
         managerScript = manager.GetComponent<SceneManager>();
         pendulum = pendulum.GetComponent<Pendulo>();
 
-        gravInput.onValueChanged.AddListener(delegate { InputSetGravity(); });
-        inAngleXInput.onValueChanged.AddListener(delegate { InputSetInitAngleX(); });
-        inAngleZInput.onValueChanged.AddListener(delegate { InputSetInitAngleZ(); });
-        inAngleVelXInput.onValueChanged.AddListener(delegate { InputSetInitAngularVelX(); });
-        inAngleVelZInput.onValueChanged.AddListener(delegate { InputSetInitAngularVelZ(); });
-
         gravitySlider.onValueChanged.AddListener(delegate { SetGravity(); });
+        frictionSlider.onValueChanged.AddListener(delegate { SetFriction(); });
         initAngleXSlider.onValueChanged.AddListener(delegate { SetInitAngleX(); });
         initAngleZSlider.onValueChanged.AddListener(delegate { SetInitAngleZ(); });
         initVelXSlider.onValueChanged.AddListener(delegate { SetInitAngularVelX(); });
         initVelZSlider.onValueChanged.AddListener(delegate { SetInitAngularVelZ(); });
+
+        gravInput.onValueChanged.AddListener(delegate { InputSetGravity(); });
+        fricInput.onValueChanged.AddListener(delegate { InputSetFriction(); });
+        inAngleXInput.onValueChanged.AddListener(delegate { InputSetInitAngleX(); });
+        inAngleZInput.onValueChanged.AddListener(delegate { InputSetInitAngleZ(); });
+        inAngleVelXInput.onValueChanged.AddListener(delegate { InputSetInitAngularVelX(); });
+        inAngleVelZInput.onValueChanged.AddListener(delegate { InputSetInitAngularVelZ(); });
     }
 
     //ESTABLECER ESCENA
@@ -77,6 +82,12 @@ public class CanvasScript : MonoBehaviour {
         pendulum.method = method;
     }
 
+    //CAMERA
+    public void FreeCamera()
+    {
+        theCamera.GetComponent<CameraScript>().enabled = !theCamera.GetComponent<CameraScript>().enabled;
+    }
+
     //GRAVEDAD
     public void SetGravity() //Establecer gravedad modo scroller
     {
@@ -91,6 +102,22 @@ public class CanvasScript : MonoBehaviour {
 
         //Asignar valor
         pendulum.SetGravity(float.Parse(gravInput.GetComponent<InputField>().text));
+    }
+
+    //FRICCIÓN
+    public void SetFriction()
+    {
+        fricInput.text = frictionSlider.value.ToString(); //Ajustar tambien el valor del input
+
+        //Asignar valor
+        pendulum.SetFriction(frictionSlider.GetComponent<Slider>().value);
+    }
+    public void InputSetFriction()
+    {
+        frictionSlider.value = float.Parse(fricInput.text); //Ajustar tambien el valor del slider
+
+        //Asignar valor
+        pendulum.SetFriction(float.Parse(fricInput.GetComponent<InputField>().text));
     }
 
     //ANGULO EN X
