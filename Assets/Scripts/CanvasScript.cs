@@ -1,8 +1,8 @@
-﻿using System.Collections;
+﻿using UnityEngine.SceneManagement;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.SceneManagement;
 
 public class CanvasScript : MonoBehaviour {
 
@@ -12,6 +12,7 @@ public class CanvasScript : MonoBehaviour {
     public Dropdown sceneChoice;
 
     public Toggle eulerToggle;
+
     public Camera theCamera;
 
     public Slider gravitySlider;
@@ -189,12 +190,14 @@ public class CanvasScript : MonoBehaviour {
         eulerToggle.interactable = to;
 
         gravitySlider.interactable = to;
+        frictionSlider.interactable = to;
         initAngleXSlider.interactable = to;
         initAngleZSlider.interactable = to;
         initVelXSlider.interactable = to;
         initVelZSlider.interactable = to;
 
         gravInput.interactable = to;
+        fricInput.interactable = to;
         inAngleXInput.interactable = to;
         inAngleZInput.interactable = to;
         inAngleVelXInput.interactable = to;
