@@ -308,4 +308,8 @@ public class Pendulo : MonoBehaviour
     {
         initAngularVelZ = value;
     }
+    public void SetGravity(float value)
+    {
+        gravity = value;
+    }
 }
