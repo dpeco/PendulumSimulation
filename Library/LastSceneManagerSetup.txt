@@ -1,4 +1,4 @@
 sceneSetups:
-- path: Assets/Scenes/PendulumScene.unity
+- path: Assets/Scenes/PendulumScene2.unity
   isLoaded: 1
   isActive: 1

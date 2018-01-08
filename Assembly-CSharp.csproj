@@ -53,6 +53,7 @@
   <ItemGroup>
      <Compile Include="Assets\Scripts\CameraScript.cs" />
      <Compile Include="Assets\Scripts\CanvasScript.cs" />
+     <Compile Include="Assets\Scripts\CanvasScript2.cs" />
      <Compile Include="Assets\Scripts\elasticScripts\CilinderBody.cs" />
      <Compile Include="Assets\Scripts\elasticScripts\ElasticSceneManager.cs" />
      <Compile Include="Assets\Scripts\elasticScripts\PendulumElastic.cs" />

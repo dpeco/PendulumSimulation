@@ -28,19 +28,19 @@ public class ElasticSceneManager : MonoBehaviour {
         if (statusSimulation != States.done)
             timer += Time.deltaTime;
 
-        if (Input.GetKeyDown("space") && statusSimulation == States.done)
+        if (startSimulation /*Input.GetKeyDown("space")*/ && statusSimulation == States.done) //Start
         {
             startSimulation = false;
             statusSimulation = States.init;
             pendulum.ResetPendulum(new Vector3Class(targetSphere.position));
             pendulum.SetMove(true);
         }
-        else if (Input.GetKeyDown("space") && statusSimulation == States.init)
+        /*else if (Input.GetKeyDown("space") && statusSimulation == States.init) //Stop
         {
             startSimulation = false;
             statusSimulation = States.done;
             pendulum.SetMove(false);
-        }
+        }*/
     }
     void StartTheSimulation()
     {

@@ -31,7 +31,6 @@ public class CanvasScript : MonoBehaviour {
     private bool method = true;
 
     private SceneManager managerScript;
-    //private bool startSimulation;
 
     // Use this for initialization
     void Start ()
@@ -59,10 +58,10 @@ public class CanvasScript : MonoBehaviour {
     {
         if (sceneChoice.value == 0)
         {
-            //SceneManager.LoadScene("PendulumScene");
+            UnityEngine.SceneManagement.SceneManager.LoadScene("PendulumScene");
         }
         else {
-            //SceneManager.LoadScene("PendulumScene2");
+            UnityEngine.SceneManagement.SceneManager.LoadScene("PendulumScene2");
         }
     }
 

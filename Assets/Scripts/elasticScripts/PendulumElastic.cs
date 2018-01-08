@@ -16,6 +16,11 @@ public class PendulumElastic : MonoBehaviour
     public int stringPartitions = 10; //cantidad de particiones de la cuerda
     public float stringPartLength = 0.2f;  //distancia inicial de cada segmento de la cuerda
 
+    public float gravity = -9.81f;
+    //Iterations establece el numero de veces que se repite la Actualización De Posiciones en una sola iteracion
+    //cuantas mas, menos probabilidad de error / la cuerda pete (mecánica flashbacks)
+    public int iterations = 50;
+
     public float kElasticity = 40f; //constante elasticidad para muelle
     public float kDamping = 2f; //constante damping para muelle
 
@@ -62,9 +67,7 @@ public class PendulumElastic : MonoBehaviour
         {
             if (ropeSegments.Count > 0)
             {
-                //establece el numero de veces que se repite la actualización de posiciones en una sola iteracion
-                //cuantas mas, menos probabilidad de error / la cuerda pete (mecánica flashbacks)
-                int iterations = 50;
+                //Actualizacion de posiciones
 
                 for (int i = 0; i < iterations; i++)
                 {
@@ -178,7 +181,7 @@ public class PendulumElastic : MonoBehaviour
             }
 
             //creamos fuerza de gravedad con la masa
-            Vector3Class gravityForce = new Vector3Class(0f, -9.81f, 0f);
+            Vector3Class gravityForce = new Vector3Class(0f, gravity, 0f);
             gravityForce *= springMass;
 
             //sumamos ambas fuerzas calculadas
@@ -277,5 +280,10 @@ public class PendulumElastic : MonoBehaviour
         
         //actualiza posicion del objeto bola
         pos2.position = ropeSegments[0].pos.GetValues();
+    }
+
+    public void SetGravity(float value)
+    {
+        gravity = value;
     }
 }
