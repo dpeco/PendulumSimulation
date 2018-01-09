@@ -130,5 +130,8 @@ public class SceneManager : MonoBehaviour
     void StartTheSimulation() {
         startSimulation = true;
     }
+    public void SetTimeToStop(int value) {
+        timeToStopSimulation = (float)value;
+    }
 }
 

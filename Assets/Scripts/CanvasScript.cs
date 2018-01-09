@@ -15,6 +15,7 @@ public class CanvasScript : MonoBehaviour {
 
     public Camera theCamera;
 
+    public Slider stopSlider;
     public Slider gravitySlider;
     public Slider frictionSlider;
     public Slider initAngleXSlider;
@@ -22,6 +23,7 @@ public class CanvasScript : MonoBehaviour {
 	public Slider initVelXSlider;
 	public Slider initVelZSlider;
 
+    public InputField stopInput;
     public InputField gravInput;
     public InputField fricInput;
     public InputField inAngleXInput;
@@ -39,6 +41,7 @@ public class CanvasScript : MonoBehaviour {
         managerScript = manager.GetComponent<SceneManager>();
         pendulum = pendulum.GetComponent<Pendulo>();
 
+        stopSlider.onValueChanged.AddListener(delegate { StopAt(); });
         gravitySlider.onValueChanged.AddListener(delegate { SetGravity(); });
         frictionSlider.onValueChanged.AddListener(delegate { SetFriction(); });
         initAngleXSlider.onValueChanged.AddListener(delegate { SetInitAngleX(); });
@@ -46,6 +49,7 @@ public class CanvasScript : MonoBehaviour {
         initVelXSlider.onValueChanged.AddListener(delegate { SetInitAngularVelX(); });
         initVelZSlider.onValueChanged.AddListener(delegate { SetInitAngularVelZ(); });
 
+        stopInput.onValueChanged.AddListener(delegate { InputStopAt(); });
         gravInput.onValueChanged.AddListener(delegate { InputSetGravity(); });
         fricInput.onValueChanged.AddListener(delegate { InputSetFriction(); });
         inAngleXInput.onValueChanged.AddListener(delegate { InputSetInitAngleX(); });
@@ -86,6 +90,20 @@ public class CanvasScript : MonoBehaviour {
     public void FreeCamera()
     {
         theCamera.GetComponent<CameraScript>().enabled = !theCamera.GetComponent<CameraScript>().enabled;
+    }
+
+    //DEFINIR TIEMPO DE FINALIZACION
+    public void StopAt()
+    {
+        stopInput.text = stopSlider.value.ToString();
+
+        managerScript.SetTimeToStop((int)stopSlider.GetComponent<Slider>().value);
+    }
+    public void InputStopAt()
+    {
+        stopSlider.value = float.Parse(stopInput.text);
+
+        managerScript.SetTimeToStop((int)float.Parse(stopInput.GetComponent<InputField>().text));
     }
 
     //GRAVEDAD
@@ -193,6 +211,7 @@ public class CanvasScript : MonoBehaviour {
 
         eulerToggle.interactable = to;
 
+        stopSlider.interactable = to;
         gravitySlider.interactable = to;
         frictionSlider.interactable = to;
         initAngleXSlider.interactable = to;
@@ -200,6 +219,7 @@ public class CanvasScript : MonoBehaviour {
         initVelXSlider.interactable = to;
         initVelZSlider.interactable = to;
 
+        stopInput.interactable = to;
         gravInput.interactable = to;
         fricInput.interactable = to;
         inAngleXInput.interactable = to;
