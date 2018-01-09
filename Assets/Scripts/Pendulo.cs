@@ -30,6 +30,7 @@ public class Pendulo : MonoBehaviour
 
     public bool method;
 
+    Vector3Class stringVector = new Vector3Class();
     // Use this for initialization
     void Start()
     {
@@ -56,23 +57,19 @@ public class Pendulo : MonoBehaviour
         if (curAngleX > Mathf.PI)
         {
             curAngleX -= 2 * Mathf.PI;
-            print("xd");
         }
         if (curAngleX < -Mathf.PI)
         {
             curAngleX += 2 * Mathf.PI;
-            print("xd");
         }
 
         if (curAngleZ > Mathf.PI)
         {
             curAngleZ -= 2 * Mathf.PI;
-            print("xd");
         }
         if (curAngleZ < -Mathf.PI)
         {
             curAngleZ += 2 * Mathf.PI;
-            print("xd");
         }
 
     }
@@ -123,7 +120,7 @@ public class Pendulo : MonoBehaviour
             {
                 Vector3Class p1 = new Vector3Class(pos1.position);
                 Vector3Class p2 = new Vector3Class(pos2.position);
-                Vector3Class stringVector = (p2 - p1);
+                stringVector = (p2 - p1);
 
 
                 Vector3Class stringX = new Vector3Class(stringVector.x, stringVector.y, stringVector.z);
@@ -148,30 +145,24 @@ public class Pendulo : MonoBehaviour
                 if (curAngleX > Mathf.PI)
                 {
                     curAngleX -= 2 * Mathf.PI;
-                    print("xd");
                 }
                 if (curAngleX < -Mathf.PI)
                 {
                     curAngleX += 2 * Mathf.PI;
-                    print("xd");
                 }
 
                 if (curAngleZ > Mathf.PI)
                 {
                     curAngleZ -= 2 * Mathf.PI;
-                    print("xd");
                 }
                 if (curAngleZ < -Mathf.PI)
                 {
                     curAngleZ += 2 * Mathf.PI;
-                    print("xd");
                 }
-                Vector3Class angularVec = new Vector3Class(curAngularVelX, 0, curAngularVelZ);
-                angularVec = angularVec.CrossProduct(angularVec, stringVector);
-                Debug.DrawRay(pos2.position, angularVec.GetValues(), Color.blue);
-
+              
                 transform.localEulerAngles = new Vector3(curAngleX * Mathf.Rad2Deg, 0, curAngleZ * Mathf.Rad2Deg); ;
             }
+            DrawLines();
         }
     }
 
@@ -186,65 +177,98 @@ public class Pendulo : MonoBehaviour
         float tempAngleZ = curAngleZ;
         float tempAngularVelX = curAngularVelX;
         float tempAngularVelZ = curAngularVelZ;
-
-        while (timeCalc < seconds)
+        if (!method)
         {
-            timeCalc += Time.deltaTime;
+            float predictedTime = time + seconds;
+            //FORMULA CALCULO DE ANGULO:
+            //PART1
+            float formulaPart1X;
 
-            Vector3Class p1 = new Vector3Class(pos1.position);
-            Vector3Class p2 = new Vector3Class(pos2.position);
-            Vector3Class stringVector = (p2 - p1);
+            formulaPart1X = initAngularVelX / Mathf.Sqrt(gravity / stringDistance) * Mathf.Sin(Mathf.Sqrt(gravity / stringDistance) * predictedTime);
+            //PART2
+            float formulaPart2X;
 
+            formulaPart2X = initAngleX * Mathf.Cos(Mathf.Sqrt(gravity / stringDistance) * predictedTime);
 
-            Vector3Class stringX = new Vector3Class(stringVector.x, stringVector.y, stringVector.z);
-            stringX.x = 0;
-            Vector3Class stringZ = new Vector3Class(stringVector.x, stringVector.y, stringVector.z);
-            stringZ.z = 0;
+            tempAngleX = formulaPart1X + formulaPart2X;
 
-            float glX = gravity / stringX.Size();
-            float glZ = gravity / stringZ.Size();
+            //---------
 
-            float dragX = cDrag / stringX.Size() * curAngularVelX;
-            float dragZ = cDrag / stringZ.Size() * curAngularVelZ;
+            //FORMULA CALCULO DE ANGULO:
+            //PART1
+            float formulaPart1Z;
 
-            //calculo numerico pendulo
-            tempAngularVelX += Time.deltaTime * ((-1 * glX * Mathf.Sin(tempAngleX)) - dragX);
-            tempAngleX += Time.deltaTime * tempAngularVelX;
+            formulaPart1Z = initAngularVelZ / Mathf.Sqrt(gravity / stringDistance) * Mathf.Sin(Mathf.Sqrt(gravity / stringDistance) * predictedTime);
+            //PART2
+            float formulaPart2Z;
 
-            tempAngularVelZ += Time.deltaTime * ((-1 * glZ * Mathf.Sin(tempAngleZ)) - dragZ);
-            tempAngleZ += Time.deltaTime * tempAngularVelZ;
+            formulaPart2Z = initAngleZ * Mathf.Cos(Mathf.Sqrt(gravity / stringDistance) * predictedTime);
 
-            //regula angulos
-            if (tempAngleX > Mathf.PI)
-            {
-                curAngleX -= 2 * Mathf.PI;
-                print("xd");
-            }
-            if (tempAngleX < -Mathf.PI)
-            {
-                curAngleX += 2 * Mathf.PI;
-                print("xd");
-            }
+            tempAngleZ = formulaPart1Z + formulaPart2Z;
 
-            if (tempAngleZ > Mathf.PI)
-            {
-                curAngleZ -= 2 * Mathf.PI;
-                print("xd");
-            }
-            if (tempAngleZ < -Mathf.PI)
-            {
-                curAngleZ += 2 * Mathf.PI;
-                print("xd");
-            }
+            //---------
 
-            transform.localEulerAngles = new Vector3(tempAngleX * Mathf.Rad2Deg, 0, tempAngleZ * Mathf.Rad2Deg);
+            transform.localEulerAngles = new Vector3(tempAngleX, 0, tempAngleZ);
+
         }
+        else
+        {
+            while (timeCalc < seconds)
+            {
+                timeCalc += Time.deltaTime;
+
+                Vector3Class p1 = new Vector3Class(pos1.position);
+                Vector3Class p2 = new Vector3Class(pos2.position);
+                Vector3Class stringVector = (p2 - p1);
+
+
+                Vector3Class stringX = new Vector3Class(stringVector.x, stringVector.y, stringVector.z);
+                stringX.x = 0;
+                Vector3Class stringZ = new Vector3Class(stringVector.x, stringVector.y, stringVector.z);
+                stringZ.z = 0;
+
+                float glX = gravity / stringX.Size();
+                float glZ = gravity / stringZ.Size();
+
+                float dragX = cDrag / stringX.Size() * curAngularVelX;
+                float dragZ = cDrag / stringZ.Size() * curAngularVelZ;
+
+                //calculo numerico pendulo
+                tempAngularVelX += Time.deltaTime * ((-1 * glX * Mathf.Sin(tempAngleX)) - dragX);
+                tempAngleX += Time.deltaTime * tempAngularVelX;
+
+                tempAngularVelZ += Time.deltaTime * ((-1 * glZ * Mathf.Sin(tempAngleZ)) - dragZ);
+                tempAngleZ += Time.deltaTime * tempAngularVelZ;
+
+                //regula angulos
+                if (tempAngleX > Mathf.PI)
+                {
+                    curAngleX -= 2 * Mathf.PI;
+                }
+                if (tempAngleX < -Mathf.PI)
+                {
+                    curAngleX += 2 * Mathf.PI;
+                }
+
+                if (tempAngleZ > Mathf.PI)
+                {
+                    curAngleZ -= 2 * Mathf.PI;
+                }
+                if (tempAngleZ < -Mathf.PI)
+                {
+                    curAngleZ += 2 * Mathf.PI;
+                }
+
+                transform.localEulerAngles = new Vector3(tempAngleX * Mathf.Rad2Deg, 0, tempAngleZ * Mathf.Rad2Deg);
+            }
+        }
+
         Vector3Class predictedTarget = new Vector3Class(pos2.position);
         transform.localEulerAngles = initAngles;
         return predictedTarget;
     }
 
-    public void SetMove(bool var)
+        public void SetMove(bool var)
     {
         move = var;
     }
@@ -277,23 +301,19 @@ public class Pendulo : MonoBehaviour
         if (curAngleX > Mathf.PI)
         {
             curAngleX -= 2 * Mathf.PI;
-            print("xd");
         }
         if (curAngleX < -Mathf.PI)
         {
             curAngleX += 2 * Mathf.PI;
-            print("xd");
         }
 
         if (curAngleZ > Mathf.PI)
         {
             curAngleZ -= 2 * Mathf.PI;
-            print("xd");
         }
         if (curAngleZ < -Mathf.PI)
         {
             curAngleZ += 2 * Mathf.PI;
-            print("xd");
         }
     }
     public void NewPendulumAngle(Vector3Class angle)
@@ -315,5 +335,12 @@ public class Pendulo : MonoBehaviour
     public void SetFriction(float value)
     {
         cDrag = value;
+    }
+    void DrawLines()
+    {
+        Vector3Class angularVec = new Vector3Class(curAngularVelX, 0, curAngularVelZ);
+        angularVec = angularVec.CrossProduct(angularVec, stringVector);
+
+        Debug.DrawLine(pos2.position, angularVec.GetValues(), Color.green);
     }
 }

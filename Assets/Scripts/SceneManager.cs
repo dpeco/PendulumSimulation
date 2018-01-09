@@ -6,6 +6,7 @@ public class SceneManager : MonoBehaviour
 {
 
     public Pendulo pendulum;
+    public CanvasScript canvas;
     public ENTICourse.IK.InverseKinematics roboticHand;
 
     public bool startSimulation = false;
@@ -27,10 +28,11 @@ public class SceneManager : MonoBehaviour
     
     private float initStopTime;
     private bool openedHands;
-    Vector3Class pepe;
+
     void Start()
     {
         pendulum.GetComponent<Pendulo>();
+        canvas.GetComponent<CanvasScript>();
         roboticHand.GetComponent<ENTICourse.IK.InverseKinematics>();
 
         pendulum.SetMove(false);
@@ -106,7 +108,7 @@ public class SceneManager : MonoBehaviour
             statusSimulation = States.closeHand;
         }
 
-        if (statusSimulation == States.closeHand && timer > timeToPredictStopPosition - 0.3f) //se para el pendulo
+        if (statusSimulation == States.closeHand && timer > timeToPredictStopPosition - 0.3f) //se empiezan a cerrar las manos
         {
             statusSimulation = States.stopPendulum;
             for (int i = 0; i < 5; i++)
@@ -118,6 +120,7 @@ public class SceneManager : MonoBehaviour
         if (statusSimulation == States.stopPendulum && timer > timeToPredictStopPosition) //se para el pendulo
         {
             pendulum.SetMove(false);
+            canvas.AllowInputP(true);
             timeToPredictStopPosition = initStopTime;
             statusSimulation = States.done;
             openedHands = false;

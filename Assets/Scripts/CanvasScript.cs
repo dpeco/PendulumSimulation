@@ -183,6 +183,10 @@ public class CanvasScript : MonoBehaviour {
 
         pendulum.SetAngularVelZ(float.Parse(inAngleVelZInput.GetComponent<InputField>().text));
     }
+    public void AllowInputP(bool yo)
+    {
+        AllowInput(yo);
+    }
 
     //BLOQUEO/ACTIVACIÓN DE INPUT
     private void AllowInput(bool to) {

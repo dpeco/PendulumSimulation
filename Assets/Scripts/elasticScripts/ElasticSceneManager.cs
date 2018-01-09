@@ -19,6 +19,7 @@ public class ElasticSceneManager : MonoBehaviour {
 
         pendulum.SetMove(false);
         statusSimulation = States.done;
+        startSimulation = false;
     }
 
     // Update is called once per frame
@@ -28,21 +29,21 @@ public class ElasticSceneManager : MonoBehaviour {
         if (statusSimulation != States.done)
             timer += Time.deltaTime;
 
-        if (startSimulation /*Input.GetKeyDown("space")*/ && statusSimulation == States.done) //Start
+        if (startSimulation && statusSimulation == States.done) //Start
         {
             startSimulation = false;
             statusSimulation = States.init;
             pendulum.ResetPendulum(new Vector3Class(targetSphere.position));
             pendulum.SetMove(true);
         }
-        /*else if (Input.GetKeyDown("space") && statusSimulation == States.init) //Stop
+        else if (startSimulation && statusSimulation == States.init) //Stop
         {
             startSimulation = false;
             statusSimulation = States.done;
             pendulum.SetMove(false);
-        }*/
+        }
     }
-    void StartTheSimulation()
+    public void StartTheSimulation()
     {
         startSimulation = true;
     }

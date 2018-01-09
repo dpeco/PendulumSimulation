@@ -26,7 +26,7 @@ public class PendulumElastic : MonoBehaviour
 
     public float massRopeSegment = 0.2f; //masa para segmento de la cuerda
     public float massLastRopeSegment = 1; //masa de la bola del final del pendulo
-    bool move = true; //permite controlar si se calcula o no
+    bool move = false; //permite controlar si se calcula o no
     public float minStretch = 0.1f; //minimo de lo que se puede contraer un segmento
     public float maxStretch = 0.3f; //maximo de lo que se puede estirar un segmento
     
@@ -285,5 +285,41 @@ public class PendulumElastic : MonoBehaviour
     public void SetGravity(float value)
     {
         gravity = value;
+    }
+    public void SetIterations(int value)
+    {
+        iterations = value;
+    }
+    public void SetPartitions(int value)
+    {
+        stringPartitions = value;
+    }
+    public void SetPartLength(float value)
+    {
+        stringPartLength = value;
+    }
+    public void SetElasticity(float value)
+    {
+        kElasticity = value;
+    }
+    public void SetDamping(float value)
+    {
+        kDamping = value;
+    }
+    public void SetMassSegment (float value)
+    {
+        massRopeSegment = value;
+    }
+    public void SetLastMassSegment(float value)
+    {
+        massLastRopeSegment = value;
+    }
+    public void SetMinStretch (float value)
+    {
+        minStretch = value;
+    }
+    public void SetMaxStretch(float value)
+    {
+        maxStretch = value;
     }
 }
